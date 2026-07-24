@@ -1,107 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📸 PHOTOBOOTH - FABLE 5</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>📸 PHOTOBOOTH · PINK</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
-        
+        /* ===== FONTS ===== */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&display=swap');
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Orbitron', sans-serif;
-            background: #0a0a0f;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0d0d0d;
             min-height: 100vh;
-            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
         }
 
-        /* GLOW EFFECTS */
-        .glow-border {
-            box-shadow: 0 0 30px rgba(255, 0, 100, 0.3), 0 0 60px rgba(255, 0, 100, 0.1);
+        /* ===== MAIN CARD ===== */
+        .app-card {
+            max-width: 480px;
+            width: 100%;
+            background: #1a1a1a;
+            border-radius: 40px;
+            padding: 24px 20px 28px;
+            box-shadow: 0 20px 60px rgba(255, 45, 120, 0.15), 0 0 80px rgba(255, 45, 120, 0.05);
+            border: 1px solid rgba(255, 45, 120, 0.15);
+            transition: all 0.3s;
         }
 
-        .glow-text {
-            text-shadow: 0 0 20px rgba(255, 0, 100, 0.5), 0 0 40px rgba(255, 0, 100, 0.2);
+        /* ===== HEADER ===== */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding: 0 4px;
         }
 
-        /* WEBCAM CONTAINER */
-        #webcam-container {
-            position: relative;
+        .app-title {
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #FF2D78, #FF6B9D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .app-badge {
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: #FF2D78;
+            background: rgba(255, 45, 120, 0.12);
+            padding: 4px 12px;
             border-radius: 20px;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255, 45, 120, 0.2);
+        }
+
+        /* ===== WEBCAM CONTAINER ===== */
+        .camera-wrapper {
+            position: relative;
+            border-radius: 24px;
             overflow: hidden;
             background: #111;
-            aspect-ratio: 4/3;
-            max-width: 800px;
+            aspect-ratio: 4 / 3;
             width: 100%;
+            border: 2px solid rgba(255, 45, 120, 0.2);
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
         }
 
-        #webcam-container video {
+        .camera-wrapper video {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transform: scaleX(-1);
+            display: block;
         }
 
-        #webcam-container canvas {
+        .camera-wrapper canvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transform: scaleX(-1);
             pointer-events: none;
         }
 
-        /* COUNTDOWN OVERLAY */
-        #countdown-overlay {
+        /* Mirror toggle: flip via CSS class on video + canvas */
+        .camera-wrapper.mirror-on video,
+        .camera-wrapper.mirror-on canvas {
+            transform: scaleX(-1);
+        }
+
+        /* ===== OVERLAYS ===== */
+        .overlay-countdown {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             z-index: 20;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.2s;
+            transition: opacity 0.25s ease;
         }
 
-        #countdown-overlay.active {
+        .overlay-countdown.active {
             opacity: 1;
             pointer-events: auto;
         }
 
-        #countdown-number {
-            font-size: 12rem;
-            font-weight: 900;
+        .countdown-number {
+            font-size: 8rem;
+            font-weight: 800;
             color: #fff;
-            text-shadow: 0 0 60px rgba(255, 0, 100, 0.8), 0 0 120px rgba(255, 0, 100, 0.4);
-            animation: pulse 0.8s ease-in-out infinite alternate;
+            text-shadow: 0 0 60px rgba(255, 45, 120, 0.7), 0 0 120px rgba(255, 45, 120, 0.3);
+            animation: pulse 0.7s ease-in-out infinite alternate;
+            font-family: 'Inter', sans-serif;
         }
 
         @keyframes pulse {
             0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(1.2); opacity: 0.6; }
+            100% { transform: scale(1.15); opacity: 0.5; }
         }
 
-        /* FLASH EFFECT */
-        #flash-overlay {
+        .overlay-flash {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             background: white;
             z-index: 30;
             opacity: 0;
@@ -109,55 +148,250 @@
             transition: opacity 0.05s;
         }
 
-        #flash-overlay.active {
-            opacity: 0.9;
+        .overlay-flash.active {
+            opacity: 0.85;
             transition: opacity 0s;
         }
 
-        /* FILTER BUTTONS */
-        .filter-btn {
-            padding: 8px 18px;
-            border-radius: 50px;
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            background: rgba(255, 255, 255, 0.05);
-            color: #aaa;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: all 0.3s;
+        /* Status dot */
+        .status-badge {
+            position: absolute;
+            bottom: 14px;
+            left: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 6px 14px 6px 10px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            z-index: 10;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4ade80;
+            animation: blink 1.2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+
+        .status-dot.off {
+            background: #f87171;
+            animation: none;
+        }
+
+        .status-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        .filter-btn:hover {
-            border-color: #ff0064;
+        /* Filter label */
+        .filter-label {
+            position: absolute;
+            bottom: 14px;
+            right: 14px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 6px 14px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            z-index: 10;
+            font-size: 0.55rem;
+            font-weight: 700;
             color: #fff;
-            background: rgba(255, 0, 100, 0.15);
-            transform: scale(1.05);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
-        .filter-btn.active {
-            border-color: #ff0064;
+        /* ===== CONTROLS ROW ===== */
+        .controls-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-capture {
+            flex: 1;
+            min-width: 140px;
+            background: linear-gradient(135deg, #FF2D78, #FF6B9D);
             color: #fff;
-            background: rgba(255, 0, 100, 0.2);
-            box-shadow: 0 0 20px rgba(255, 0, 100, 0.3);
+            border: none;
+            padding: 14px 20px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 24px rgba(255, 45, 120, 0.3);
+            letter-spacing: 0.3px;
         }
 
-        /* GALLERY */
+        .btn-capture:active {
+            transform: scale(0.96);
+        }
+
+        .btn-capture:disabled {
+            opacity: 0.5;
+            transform: none;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+            color: #ccc;
+            padding: 12px 16px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-width: 48px;
+            flex: 0 1 auto;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .btn-outline:active {
+            transform: scale(0.94);
+        }
+
+        .btn-outline.active {
+            border-color: #FF2D78;
+            color: #FF2D78;
+            background: rgba(255, 45, 120, 0.08);
+        }
+
+        /* ===== FILTERS ROW ===== */
+        .filters-scroll {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px 0 12px 0;
+            margin-top: 16px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .filters-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-chip {
+            flex: 0 0 auto;
+            padding: 7px 18px;
+            border-radius: 40px;
+            border: 1.5px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.03);
+            color: #888;
+            font-size: 0.65rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.25s;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .filter-chip:active {
+            transform: scale(0.94);
+        }
+
+        .filter-chip.active {
+            border-color: #FF2D78;
+            color: #fff;
+            background: rgba(255, 45, 120, 0.15);
+            box-shadow: 0 0 24px rgba(255, 45, 120, 0.15);
+        }
+
+        /* ===== GALLERY ===== */
+        .gallery-section {
+            margin-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 16px;
+        }
+
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .gallery-header h3 {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #aaa;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .gallery-header span {
+            font-size: 0.6rem;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            max-height: 140px;
+            overflow-y: auto;
+            padding-right: 2px;
+        }
+
+        .gallery-grid::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .gallery-grid::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .gallery-grid::-webkit-scrollbar-thumb {
+            background: #FF2D78;
+            border-radius: 10px;
+        }
+
         .gallery-item {
             position: relative;
             border-radius: 12px;
             overflow: hidden;
-            aspect-ratio: 4/3;
+            aspect-ratio: 4 / 3;
+            background: #1a1a1a;
+            border: 1.5px solid rgba(255, 255, 255, 0.04);
             cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s;
         }
 
-        .gallery-item:hover {
-            transform: scale(1.03);
-            border-color: #ff0064;
-            box-shadow: 0 0 30px rgba(255, 0, 100, 0.2);
+        .gallery-item:active {
+            transform: scale(0.94);
         }
 
         .gallery-item img {
@@ -168,245 +402,325 @@
 
         .gallery-item .delete-btn {
             position: absolute;
-            top: 8px;
-            right: 8px;
-            background: rgba(255, 0, 0, 0.8);
-            color: white;
-            border: none;
+            top: 4px;
+            right: 4px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            font-size: 14px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: none;
+            color: #fff;
+            font-size: 12px;
             cursor: pointer;
             opacity: 0;
-            transition: all 0.3s;
+            transition: opacity 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
         }
 
         .gallery-item:hover .delete-btn {
             opacity: 1;
         }
 
-        /* SCROLLBAR */
-        ::-webkit-scrollbar {
-            width: 6px;
+        .gallery-item .delete-btn:active {
+            background: #FF2D78;
         }
 
-        ::-webkit-scrollbar-track {
-            background: #1a1a2e;
+        .empty-gallery {
+            text-align: center;
+            color: #444;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 16px 0;
+            grid-column: 1 / -1;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: #ff0064;
-            border-radius: 10px;
+        /* ===== TOGGLE ROW ===== */
+        .toggle-row {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 12px;
+            flex-wrap: wrap;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: #ff3377;
-        }
-
-        /* CUSTOM BUTTON */
-        .btn-primary {
-            background: linear-gradient(135deg, #ff0064, #ff3377);
-            color: white;
-            border: none;
-            padding: 14px 40px;
-            border-radius: 50px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            font-size: 1rem;
+        .toggle-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #888;
             cursor: pointer;
+            user-select: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .toggle-item input[type="checkbox"] {
+            display: none;
+        }
+
+        .toggle-track {
+            width: 40px;
+            height: 22px;
+            background: #2a2a2a;
+            border-radius: 20px;
+            position: relative;
             transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.06);
         }
 
-        .btn-primary:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 40px rgba(255, 0, 100, 0.4);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.08);
-            color: #aaa;
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            font-size: 0.8rem;
-            cursor: pointer;
+        .toggle-track .toggle-thumb {
+            width: 16px;
+            height: 16px;
+            background: #555;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
             transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        .btn-secondary:hover {
-            border-color: #ff0064;
-            color: #fff;
-            background: rgba(255, 0, 100, 0.1);
+        .toggle-item input:checked + .toggle-track {
+            background: rgba(255, 45, 120, 0.25);
+            border-color: #FF2D78;
         }
 
-        /* RESPONSIVE */
-        @media (max-width: 640px) {
-            #countdown-number {
-                font-size: 6rem;
+        .toggle-item input:checked + .toggle-track .toggle-thumb {
+            left: 20px;
+            background: #FF2D78;
+            box-shadow: 0 0 20px rgba(255, 45, 120, 0.4);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .app-card {
+                padding: 16px 14px 20px;
+                border-radius: 28px;
             }
-            .btn-primary {
-                padding: 10px 24px;
+            .countdown-number {
+                font-size: 5rem;
+            }
+            .btn-capture {
                 font-size: 0.8rem;
+                padding: 12px 16px;
+                min-width: 100px;
+            }
+            .btn-outline {
+                padding: 10px 12px;
+                font-size: 0.7rem;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(4, 1fr);
+                max-height: 110px;
+            }
+            .filter-chip {
+                font-size: 0.55rem;
+                padding: 5px 14px;
+            }
+            .app-title {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .controls-row {
+                gap: 6px;
+            }
+            .btn-capture {
+                font-size: 0.7rem;
+                padding: 10px 12px;
+                min-width: 80px;
+            }
+            .btn-outline {
+                padding: 8px 10px;
+                font-size: 0.6rem;
+                min-width: 40px;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(3, 1fr);
+                max-height: 100px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .app-card {
+                max-width: 520px;
+                padding: 32px 28px 32px;
+                border-radius: 48px;
+            }
+            .countdown-number {
+                font-size: 10rem;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(4, 1fr);
+                max-height: 160px;
+            }
+        }
+
+        /* Landscape phone fix */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .app-card {
+                max-width: 400px;
+                padding: 12px 16px 16px;
+            }
+            .camera-wrapper {
+                aspect-ratio: 16 / 9;
+            }
+            .gallery-grid {
+                max-height: 80px;
+            }
+            .countdown-number {
+                font-size: 4rem;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- ========== HEADER ========== -->
-    <header class="text-center py-6 px-4">
-        <h1 class="text-3xl md:text-5xl font-bold text-white glow-text tracking-widest">
-            📸 PHOTOBOOTH
-        </h1>
-        <p class="text-gray-400 text-xs md:text-sm mt-2 tracking-widest">
-            FABLE 5 PREMIUM EDITION • CAPTURE • FILTER • DOWNLOAD
-        </p>
-    </header>
+    <!-- ===== APP CARD ===== -->
+    <div class="app-card">
 
-    <!-- ========== MAIN CONTENT ========== -->
-    <main class="max-w-6xl mx-auto px-4 pb-12">
+        <!-- HEADER -->
+        <div class="app-header">
+            <span class="app-title">📸 PHOTOBOOTH</span>
+            <span class="app-badge">FABLE 5</span>
+        </div>
 
-        <!-- WEBCAM + CONTROLS -->
-        <div class="flex flex-col lg:flex-row gap-8 items-start">
+        <!-- CAMERA -->
+        <div class="camera-wrapper mirror-on" id="cameraWrapper">
+            <video id="video" autoplay playsinline muted></video>
+            <canvas id="filterCanvas"></canvas>
 
-            <!-- LEFT: WEBCAM -->
-            <div class="flex-1 w-full">
-                <div id="webcam-container" class="glow-border">
-                    <video id="video" autoplay playsinline></video>
-                    <canvas id="filter-canvas"></canvas>
-
-                    <!-- Countdown Overlay -->
-                    <div id="countdown-overlay">
-                        <span id="countdown-number">3</span>
-                    </div>
-
-                    <!-- Flash Overlay -->
-                    <div id="flash-overlay"></div>
-
-                    <!-- Status Indicator -->
-                    <div class="absolute bottom-4 left-4 flex items-center gap-2 z-10">
-                        <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse" id="status-dot"></div>
-                        <span class="text-white text-xs font-bold tracking-wider" id="status-text">LIVE</span>
-                    </div>
-
-                    <!-- Filter Name Overlay -->
-                    <div class="absolute bottom-4 right-4 z-10">
-                        <span class="text-white text-xs font-bold tracking-wider bg-black/50 px-3 py-1 rounded-full" id="filter-name">ORIGINAL</span>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="flex flex-wrap gap-3 mt-6 justify-center">
-                    <button class="btn-primary" id="capture-btn">
-                        📸 CAPTURE
-                    </button>
-                    <button class="btn-secondary" id="download-btn">
-                        ⬇️ DOWNLOAD
-                    </button>
-                    <button class="btn-secondary" id="clear-btn">
-                        🗑️ CLEAR ALL
-                    </button>
-                </div>
+            <!-- Countdown -->
+            <div class="overlay-countdown" id="countdownOverlay">
+                <span class="countdown-number" id="countdownNumber">3</span>
             </div>
 
-            <!-- RIGHT: FILTERS + GALLERY -->
-            <div class="lg:w-80 w-full">
+            <!-- Flash -->
+            <div class="overlay-flash" id="flashOverlay"></div>
 
-                <!-- Filters -->
-                <div class="bg-[#111] rounded-2xl p-4 glow-border border border-white/5">
-                    <h3 class="text-white text-xs font-bold tracking-widest mb-3">🎨 FILTERS</h3>
-                    <div class="flex flex-wrap gap-2" id="filter-buttons">
-                        <button class="filter-btn active" data-filter="none">Original</button>
-                        <button class="filter-btn" data-filter="grayscale">Grayscale</button>
-                        <button class="filter-btn" data-filter="sepia">Sepia</button>
-                        <button class="filter-btn" data-filter="invert">Invert</button>
-                        <button class="filter-btn" data-filter="blur">Blur</button>
-                        <button class="filter-btn" data-filter="vintage">Vintage</button>
-                        <button class="filter-btn" data-filter="neon">Neon</button>
-                    </div>
-                </div>
+            <!-- Status -->
+            <div class="status-badge">
+                <span class="status-dot" id="statusDot"></span>
+                <span class="status-label" id="statusLabel">LIVE</span>
+            </div>
 
-                <!-- Gallery -->
-                <div class="bg-[#111] rounded-2xl p-4 mt-4 glow-border border border-white/5 flex-1">
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="text-white text-xs font-bold tracking-widest">📷 GALLERY</h3>
-                        <span class="text-gray-500 text-xs" id="gallery-count">0 photos</span>
-                    </div>
-                    <div id="gallery-grid" class="grid grid-cols-3 gap-2 max-h-[300px] overflow-y-auto pr-1">
-                        <!-- Gallery items will be inserted here -->
-                    </div>
-                    <p class="text-gray-600 text-center text-xs mt-3" id="empty-gallery-msg">No photos yet. Capture one!</p>
-                </div>
+            <!-- Filter Label -->
+            <span class="filter-label" id="filterLabel">ORIGINAL</span>
+        </div>
+
+        <!-- TOGGLES -->
+        <div class="toggle-row">
+            <label class="toggle-item">
+                <input type="checkbox" id="mirrorToggle" checked />
+                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                <span>🪞 Mirror</span>
+            </label>
+            <label class="toggle-item">
+                <input type="checkbox" id="flashToggle" checked />
+                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                <span>⚡ Flash</span>
+            </label>
+        </div>
+
+        <!-- FILTERS -->
+        <div class="filters-scroll" id="filterScroll">
+            <button class="filter-chip active" data-filter="none">Original</button>
+            <button class="filter-chip" data-filter="grayscale">Grayscale</button>
+            <button class="filter-chip" data-filter="sepia">Sepia</button>
+            <button class="filter-chip" data-filter="invert">Invert</button>
+            <button class="filter-chip" data-filter="blur">Blur</button>
+            <button class="filter-chip" data-filter="vintage">Vintage</button>
+            <button class="filter-chip" data-filter="neon">Neon</button>
+            <button class="filter-chip" data-filter="pink">Pink Tint</button>
+        </div>
+
+        <!-- CONTROLS -->
+        <div class="controls-row">
+            <button class="btn-capture" id="captureBtn">📸 Capture</button>
+            <button class="btn-outline" id="downloadBtn" title="Download latest">⬇️</button>
+            <button class="btn-outline" id="clearBtn" title="Clear all">🗑️</button>
+        </div>
+
+        <!-- GALLERY -->
+        <div class="gallery-section">
+            <div class="gallery-header">
+                <h3>📷 Gallery</h3>
+                <span id="galleryCount">0 photos</span>
+            </div>
+            <div class="gallery-grid" id="galleryGrid">
+                <div class="empty-gallery">No photos yet. Capture one!</div>
             </div>
         </div>
 
-    </main>
+    </div>
 
-    <!-- ========== JAVASCRIPT ========== -->
+    <!-- ===== JAVASCRIPT ===== -->
     <script>
         (function() {
             'use strict';
 
-            // ========== DOM REFS ==========
+            // ========== DOM ==========
             const video = document.getElementById('video');
-            const canvas = document.getElementById('filter-canvas');
+            const canvas = document.getElementById('filterCanvas');
             const ctx = canvas.getContext('2d');
-            const container = document.getElementById('webcam-container');
-            
-            const captureBtn = document.getElementById('capture-btn');
-            const downloadBtn = document.getElementById('download-btn');
-            const clearBtn = document.getElementById('clear-btn');
-            
-            const countdownOverlay = document.getElementById('countdown-overlay');
-            const countdownNumber = document.getElementById('countdown-number');
-            const flashOverlay = document.getElementById('flash-overlay');
-            
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const filterNameEl = document.getElementById('filter-name');
-            const statusText = document.getElementById('status-text');
-            const statusDot = document.getElementById('status-dot');
-            
-            const galleryGrid = document.getElementById('gallery-grid');
-            const galleryCount = document.getElementById('gallery-count');
-            const emptyMsg = document.getElementById('empty-gallery-msg');
+            const wrapper = document.getElementById('cameraWrapper');
+
+            const captureBtn = document.getElementById('captureBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const clearBtn = document.getElementById('clearBtn');
+
+            const countdownOverlay = document.getElementById('countdownOverlay');
+            const countdownNumber = document.getElementById('countdownNumber');
+            const flashOverlay = document.getElementById('flashOverlay');
+
+            const mirrorToggle = document.getElementById('mirrorToggle');
+            const flashToggle = document.getElementById('flashToggle');
+
+            const filterChips = document.querySelectorAll('.filter-chip');
+            const filterLabel = document.getElementById('filterLabel');
+
+            const statusDot = document.getElementById('statusDot');
+            const statusLabel = document.getElementById('statusLabel');
+
+            const galleryGrid = document.getElementById('galleryGrid');
+            const galleryCount = document.getElementById('galleryCount');
 
             // ========== STATE ==========
             let stream = null;
             let currentFilter = 'none';
             let isCapturing = false;
-            let capturedPhotos = [];
-            let animationFrame = null;
+            let isMirror = true;
+            let useFlash = true;
+            let photos = [];
             let videoReady = false;
+            let animFrame = null;
+            let canvasWidth = 640;
+            let canvasHeight = 480;
 
             // ========== FILTER MAP ==========
-            const filterMap = {
+            const filters = {
                 none: { label: 'ORIGINAL', css: '' },
                 grayscale: { label: 'GRAYSCALE', css: 'grayscale(100%)' },
                 sepia: { label: 'SEPIA', css: 'sepia(100%)' },
                 invert: { label: 'INVERT', css: 'invert(100%)' },
-                blur: { label: 'BLUR', css: 'blur(4px)' },
+                blur: { label: 'BLUR', css: 'blur(3px)' },
                 vintage: { label: 'VINTAGE', css: 'sepia(60%) contrast(1.2) brightness(0.9)' },
-                neon: { label: 'NEON', css: 'saturate(200%) contrast(1.5) brightness(1.1)' }
+                neon: { label: 'NEON', css: 'saturate(220%) contrast(1.4) brightness(1.05)' },
+                pink: { label: 'PINK TINT', css: 'sepia(30%) saturate(180%) hue-rotate(320deg)' }
             };
 
-            // ========== INIT WEBCAM ==========
-            async function initWebcam() {
+            // ========== CAMERA INIT ==========
+            async function initCamera() {
                 try {
                     stream = await navigator.mediaDevices.getUserMedia({
-                        video: { 
+                        video: {
                             facingMode: 'user',
                             width: { ideal: 1280 },
                             height: { ideal: 720 }
@@ -416,45 +730,54 @@
                     video.srcObject = stream;
                     await video.play();
                     videoReady = true;
-                    
+
                     // Set canvas size
-                    canvas.width = video.videoWidth || 1280;
-                    canvas.height = video.videoHeight || 720;
-                    
-                    // Update status
-                    statusText.textContent = 'LIVE';
-                    statusDot.className = 'w-2 h-2 rounded-full bg-green-500 animate-pulse';
-                    
-                    // Start render loop
-                    renderLoop();
-                    
-                    console.log('📸 Webcam initialized!');
+                    const vw = video.videoWidth || 1280;
+                    const vh = video.videoHeight || 720;
+                    canvasWidth = vw;
+                    canvasHeight = vh;
+                    canvas.width = vw;
+                    canvas.height = vh;
+
+                    statusDot.className = 'status-dot';
+                    statusLabel.textContent = 'LIVE';
+                    console.log('📸 Camera ready');
+                    startRender();
                 } catch (err) {
-                    console.error('❌ Webcam error:', err);
-                    statusText.textContent = 'NO CAMERA';
-                    statusDot.className = 'w-2 h-2 rounded-full bg-red-500';
-                    alert('⚠️ No camera detected! Please allow camera access.');
+                    console.error('Camera error:', err);
+                    statusDot.className = 'status-dot off';
+                    statusLabel.textContent = 'OFFLINE';
+                    alert('⚠️ Camera access denied or no camera found.');
                 }
             }
 
             // ========== RENDER LOOP ==========
-            function renderLoop() {
+            function startRender() {
+                if (animFrame) cancelAnimationFrame(animFrame);
+                render();
+            }
+
+            function render() {
                 if (!videoReady || !video.videoWidth) {
-                    animationFrame = requestAnimationFrame(renderLoop);
+                    animFrame = requestAnimationFrame(render);
                     return;
                 }
-                
-                // Draw video to canvas with filter
+
+                const filter = filters[currentFilter]?.css || '';
                 ctx.save();
-                ctx.filter = filterMap[currentFilter]?.css || '';
-                
-                // Mirror horizontally (selfie mode)
-                ctx.translate(canvas.width, 0);
-                ctx.scale(-1, 1);
+
+                // Mirror via canvas transform (if mirror is ON)
+                if (isMirror) {
+                    ctx.translate(canvas.width, 0);
+                    ctx.scale(-1, 1);
+                }
+
+                // Apply filter
+                ctx.filter = filter;
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
                 ctx.restore();
-                
-                animationFrame = requestAnimationFrame(renderLoop);
+
+                animFrame = requestAnimationFrame(render);
             }
 
             // ========== CAPTURE ==========
@@ -467,82 +790,84 @@
                 countdownOverlay.classList.add('active');
                 for (let i = 3; i >= 1; i--) {
                     countdownNumber.textContent = i;
-                    await sleep(800);
+                    await sleep(700);
                 }
                 countdownNumber.textContent = '📸';
-                await sleep(300);
+                await sleep(250);
                 countdownOverlay.classList.remove('active');
 
                 // Flash
-                flashOverlay.classList.add('active');
-                await sleep(100);
-                flashOverlay.classList.remove('active');
+                if (useFlash) {
+                    flashOverlay.classList.add('active');
+                    await sleep(120);
+                    flashOverlay.classList.remove('active');
+                }
 
-                // Capture from canvas (with current filter)
+                // Capture from canvas
                 const tempCanvas = document.createElement('canvas');
                 tempCanvas.width = canvas.width;
                 tempCanvas.height = canvas.height;
-                const tempCtx = tempCanvas.getContext('2d');
-                
-                // Apply filter to captured image
-                tempCtx.filter = filterMap[currentFilter]?.css || '';
-                tempCtx.drawImage(canvas, 0, 0);
-                
-                const dataUrl = tempCanvas.toDataURL('image/jpeg', 0.95);
-                
+                const tCtx = tempCanvas.getContext('2d');
+
+                const filter = filters[currentFilter]?.css || '';
+                tCtx.filter = filter;
+
+                // Apply mirror if needed (same as render)
+                if (isMirror) {
+                    tCtx.translate(canvas.width, 0);
+                    tCtx.scale(-1, 1);
+                }
+                tCtx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                tCtx.restore();
+
+                const dataUrl = tempCanvas.toDataURL('image/jpeg', 0.94);
+
                 // Add to gallery
-                addToGallery(dataUrl);
-                
+                photos.push(dataUrl);
+                renderGallery();
+
                 // Auto download
                 downloadImage(dataUrl, `photobooth_${Date.now()}.jpg`);
-                
-                // Reset
+
                 isCapturing = false;
                 captureBtn.disabled = false;
-                console.log('📸 Photo captured!');
+                console.log('📸 Captured!');
             }
 
             // ========== GALLERY ==========
-            function addToGallery(dataUrl) {
-                capturedPhotos.push(dataUrl);
-                renderGallery();
-            }
-
             function renderGallery() {
                 galleryGrid.innerHTML = '';
-                if (capturedPhotos.length === 0) {
-                    emptyMsg.style.display = 'block';
+                if (photos.length === 0) {
+                    galleryGrid.innerHTML = '<div class="empty-gallery">No photos yet. Capture one!</div>';
                     galleryCount.textContent = '0 photos';
                     return;
                 }
-                emptyMsg.style.display = 'none';
-                galleryCount.textContent = `${capturedPhotos.length} photos`;
+                galleryCount.textContent = `${photos.length} photos`;
 
-                capturedPhotos.forEach((dataUrl, index) => {
+                photos.forEach((dataUrl, idx) => {
                     const div = document.createElement('div');
                     div.className = 'gallery-item';
-                    
+
                     const img = document.createElement('img');
                     img.src = dataUrl;
-                    img.alt = `Photo ${index + 1}`;
-                    
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.className = 'delete-btn';
-                    deleteBtn.textContent = '✕';
-                    deleteBtn.title = 'Delete';
-                    deleteBtn.addEventListener('click', (e) => {
+                    img.alt = `Photo ${idx + 1}`;
+                    img.loading = 'lazy';
+
+                    const del = document.createElement('button');
+                    del.className = 'delete-btn';
+                    del.textContent = '✕';
+                    del.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        capturedPhotos.splice(index, 1);
+                        photos.splice(idx, 1);
                         renderGallery();
                     });
-                    
-                    // Click to preview (download)
+
                     div.addEventListener('click', () => {
                         downloadImage(dataUrl, `photobooth_${Date.now()}.jpg`);
                     });
-                    
+
                     div.appendChild(img);
-                    div.appendChild(deleteBtn);
+                    div.appendChild(del);
                     galleryGrid.appendChild(div);
                 });
             }
@@ -552,47 +877,60 @@
                 const link = document.createElement('a');
                 link.download = filename;
                 link.href = dataUrl;
+                document.body.appendChild(link);
                 link.click();
+                document.body.removeChild(link);
             }
 
-            // ========== CLEAR ALL ==========
+            // ========== CLEAR ==========
             function clearAll() {
-                if (capturedPhotos.length === 0) return;
+                if (photos.length === 0) return;
                 if (confirm('🗑️ Delete all photos?')) {
-                    capturedPhotos = [];
+                    photos = [];
                     renderGallery();
-                    console.log('🗑️ Gallery cleared!');
                 }
             }
 
-            // ========== SLEEP UTILITY ==========
+            // ========== SLEEP ==========
             function sleep(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
+                return new Promise(r => setTimeout(r, ms));
             }
 
             // ========== FILTER HANDLERS ==========
-            filterButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    filterButtons.forEach(b => b.classList.remove('active'));
+            filterChips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    filterChips.forEach(c => c.classList.remove('active'));
                     this.classList.add('active');
                     currentFilter = this.dataset.filter;
-                    filterNameEl.textContent = filterMap[currentFilter]?.label || 'ORIGINAL';
+                    filterLabel.textContent = filters[currentFilter]?.label || 'ORIGINAL';
                     console.log('🎨 Filter:', currentFilter);
                 });
             });
 
+            // ========== MIRROR TOGGLE ==========
+            mirrorToggle.addEventListener('change', function() {
+                isMirror = this.checked;
+                wrapper.classList.toggle('mirror-on', isMirror);
+                console.log('🪞 Mirror:', isMirror ? 'ON' : 'OFF');
+            });
+
+            // ========== FLASH TOGGLE ==========
+            flashToggle.addEventListener('change', function() {
+                useFlash = this.checked;
+                console.log('⚡ Flash:', useFlash ? 'ON' : 'OFF');
+            });
+
             // ========== EVENT LISTENERS ==========
             captureBtn.addEventListener('click', capturePhoto);
-            
+
             downloadBtn.addEventListener('click', () => {
-                if (capturedPhotos.length === 0) {
+                if (photos.length === 0) {
                     alert('📸 No photos to download!');
                     return;
                 }
-                const latest = capturedPhotos[capturedPhotos.length - 1];
-                downloadImage(latest, `photobooth_${Date.now()}.jpg`);
+                downloadImage(photos[photos.length - 1], `photobooth_${Date.now()}.jpg`);
             });
-            
+
             clearBtn.addEventListener('click', clearAll);
 
             // Keyboard shortcuts
@@ -601,28 +939,21 @@
                     e.preventDefault();
                     capturePhoto();
                 }
-                if (e.key === 'd' || e.key === 'D') {
-                    downloadBtn.click();
-                }
-                if (e.key === 'c' || e.key === 'C') {
-                    clearBtn.click();
-                }
+                if (e.key === 'd' || e.key === 'D') downloadBtn.click();
+                if (e.key === 'c' || e.key === 'C') clearBtn.click();
             });
+
+            // ========== RESIZE HANDLER ==========
+            function handleResize() {
+                // Canvas dimensions are fixed; video scales via CSS
+            }
 
             // ========== INIT ==========
-            initWebcam();
+            initCamera();
 
-            // Handle resize
-            window.addEventListener('resize', () => {
-                if (videoReady) {
-                    const rect = container.getBoundingClientRect();
-                    // Canvas size maintained by CSS
-                }
-            });
-
-            console.log('📸 PHOTOBOOTH FABLE 5 LOADED!');
+            console.log('📸 PHOTOBOOTH PINK · FABLE 5');
             console.log('🎯 Space/Enter = Capture | D = Download | C = Clear');
-            console.log('📸 Ready to shoot!');
+            console.log('🪞 Mirror toggle available | ⚡ Flash toggle available');
 
         })();
     </script>
