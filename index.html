@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📸 PHOTOBOOTH - FABLE 5</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: #0a0a0f;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* GLOW EFFECTS */
+        .glow-border {
+            box-shadow: 0 0 30px rgba(255, 0, 100, 0.3), 0 0 60px rgba(255, 0, 100, 0.1);
+        }
+
+        .glow-text {
+            text-shadow: 0 0 20px rgba(255, 0, 100, 0.5), 0 0 40px rgba(255, 0, 100, 0.2);
+        }
+
+        /* WEBCAM CONTAINER */
+        #webcam-container {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #111;
+            aspect-ratio: 4/3;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        #webcam-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+        }
+
+        #webcam-container canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+            pointer-events: none;
+        }
+
+        /* COUNTDOWN OVERLAY */
+        #countdown-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 20;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        #countdown-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #countdown-number {
+            font-size: 12rem;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 60px rgba(255, 0, 100, 0.8), 0 0 120px rgba(255, 0, 100, 0.4);
+            animation: pulse 0.8s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.2); opacity: 0.6; }
+        }
+
+        /* FLASH EFFECT */
+        #flash-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 30;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.05s;
+        }
+
+        #flash-overlay.active {
+            opacity: 0.9;
+            transition: opacity 0s;
+        }
+
+        /* FILTER BUTTONS */
+        .filter-btn {
+            padding: 8px 18px;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+            color: #aaa;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .filter-btn:hover {
+            border-color: #ff0064;
+            color: #fff;
+            background: rgba(255, 0, 100, 0.15);
+            transform: scale(1.05);
+        }
+
+        .filter-btn.active {
+            border-color: #ff0064;
+            color: #fff;
+            background: rgba(255, 0, 100, 0.2);
+            box-shadow: 0 0 20px rgba(255, 0, 100, 0.3);
+        }
+
+        /* GALLERY */
+        .gallery-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+            border-color: #ff0064;
+            box-shadow: 0 0 30px rgba(255, 0, 100, 0.2);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-item .delete-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            font-size: 14px;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .gallery-item:hover .delete-btn {
+            opacity: 1;
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a2e;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ff0064;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff3377;
+        }
+
+        /* CUSTOM BUTTON */
+        .btn-primary {
+            background: linear-gradient(135deg, #ff0064, #ff3377);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(255, 0, 100, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: #aaa;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-secondary:hover {
+            border-color: #ff0064;
+            color: #fff;
+            background: rgba(255, 0, 100, 0.1);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 640px) {
+            #countdown-number {
+                font-size: 6rem;
+            }
+            .btn-primary {
+                padding: 10px 24px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== HEADER ========== -->
+    <header class="text-center py-6 px-4">
+        <h1 class="text-3xl md:text-5xl font-bold text-white glow-text tracking-widest">
+            📸 PHOTOBOOTH
+        </h1>
+        <p class="text-gray-400 text-xs md:text-sm mt-2 tracking-widest">
+            FABLE 5 PREMIUM EDITION • CAPTURE • FILTER • DOWNLOAD
+        </p>
+    </header>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <main class="max-w-6xl mx-auto px-4 pb-12">
+
+        <!-- WEBCAM + CONTROLS -->
+        <div class="flex flex-col lg:flex-row gap-8 items-start">
+
+            <!-- LEFT: WEBCAM -->
+            <div class="flex-1 w-full">
+                <div id="webcam-container" class="glow-border">
+                    <video id="video" autoplay playsinline></video>
+                    <canvas id="filter-canvas"></canvas>
+
+                    <!-- Countdown Overlay -->
+                    <div id="countdown-overlay">
+                        <span id="countdown-number">3</span>
+                    </div>
+
+                    <!-- Flash Overlay -->
+                    <div id="flash-overlay"></div>
+
+                    <!-- Status Indicator -->
+                    <div class="absolute bottom-4 left-4 flex items-center gap-2 z-10">
+                        <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse" id="status-dot"></div>
+                        <span class="text-white text-xs font-bold tracking-wider" id="status-text">LIVE</span>
+                    </div>
+
+                    <!-- Filter Name Overlay -->
+                    <div class="absolute bottom-4 right-4 z-10">
+                        <span class="text-white text-xs font-bold tracking-wider bg-black/50 px-3 py-1 rounded-full" id="filter-name">ORIGINAL</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap gap-3 mt-6 justify-center">
+                    <button class="btn-primary" id="capture-btn">
+                        📸 CAPTURE
+                    </button>
+                    <button class="btn-secondary" id="download-btn">
+                        ⬇️ DOWNLOAD
+                    </button>
+                    <button class="btn-secondary" id="clear-btn">
+                        🗑️ CLEAR ALL
+                    </button>
+                </div>
+            </div>
+
+            <!-- RIGHT: FILTERS + GALLERY -->
+            <div class="lg:w-80 w-full">
+
+                <!-- Filters -->
+                <div class="bg-[#111] rounded-2xl p-4 glow-border border border-white/5">
+                    <h3 class="text-white text-xs font-bold tracking-widest mb-3">🎨 FILTERS</h3>
+                    <div class="flex flex-wrap gap-2" id="filter-buttons">
+                        <button class="filter-btn active" data-filter="none">Original</button>
+                        <button class="filter-btn" data-filter="grayscale">Grayscale</button>
+                        <button class="filter-btn" data-filter="sepia">Sepia</button>
+                        <button class="filter-btn" data-filter="invert">Invert</button>
+                        <button class="filter-btn" data-filter="blur">Blur</button>
+                        <button class="filter-btn" data-filter="vintage">Vintage</button>
+                        <button class="filter-btn" data-filter="neon">Neon</button>
+                    </div>
+                </div>
+
+                <!-- Gallery -->
+                <div class="bg-[#111] rounded-2xl p-4 mt-4 glow-border border border-white/5 flex-1">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-white text-xs font-bold tracking-widest">📷 GALLERY</h3>
+                        <span class="text-gray-500 text-xs" id="gallery-count">0 photos</span>
+                    </div>
+                    <div id="gallery-grid" class="grid grid-cols-3 gap-2 max-h-[300px] overflow-y-auto pr-1">
+                        <!-- Gallery items will be inserted here -->
+                    </div>
+                    <p class="text-gray-600 text-center text-xs mt-3" id="empty-gallery-msg">No photos yet. Capture one!</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ========== JAVASCRIPT ========== -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ========== DOM REFS ==========
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('filter-canvas');
+            const ctx = canvas.getContext('2d');
+            const container = document.getElementById('webcam-container');
+            
+            const captureBtn = document.getElementById('capture-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            
+            const countdownOverlay = document.getElementById('countdown-overlay');
+            const countdownNumber = document.getElementById('countdown-number');
+            const flashOverlay = document.getElementById('flash-overlay');
+            
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const filterNameEl = document.getElementById('filter-name');
+            const statusText = document.getElementById('status-text');
+            const statusDot = document.getElementById('status-dot');
+            
+            const galleryGrid = document.getElementById('gallery-grid');
+            const galleryCount = document.getElementById('gallery-count');
+            const emptyMsg = document.getElementById('empty-gallery-msg');
+
+            // ========== STATE ==========
+            let stream = null;
+            let currentFilter = 'none';
+            let isCapturing = false;
+            let capturedPhotos = [];
+            let animationFrame = null;
+            let videoReady = false;
+
+            // ========== FILTER MAP ==========
+            const filterMap = {
+                none: { label: 'ORIGINAL', css: '' },
+                grayscale: { label: 'GRAYSCALE', css: 'grayscale(100%)' },
+                sepia: { label: 'SEPIA', css: 'sepia(100%)' },
+                invert: { label: 'INVERT', css: 'invert(100%)' },
+                blur: { label: 'BLUR', css: 'blur(4px)' },
+                vintage: { label: 'VINTAGE', css: 'sepia(60%) contrast(1.2) brightness(0.9)' },
+                neon: { label: 'NEON', css: 'saturate(200%) contrast(1.5) brightness(1.1)' }
+            };
+
+            // ========== INIT WEBCAM ==========
+            async function initWebcam() {
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({
+                        video: { 
+                            facingMode: 'user',
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 }
+                        },
+                        audio: false
+                    });
+                    video.srcObject = stream;
+                    await video.play();
+                    videoReady = true;
+                    
+                    // Set canvas size
+                    canvas.width = video.videoWidth || 1280;
+                    canvas.height = video.videoHeight || 720;
+                    
+                    // Update status
+                    statusText.textContent = 'LIVE';
+                    statusDot.className = 'w-2 h-2 rounded-full bg-green-500 animate-pulse';
+                    
+                    // Start render loop
+                    renderLoop();
+                    
+                    console.log('📸 Webcam initialized!');
+                } catch (err) {
+                    console.error('❌ Webcam error:', err);
+                    statusText.textContent = 'NO CAMERA';
+                    statusDot.className = 'w-2 h-2 rounded-full bg-red-500';
+                    alert('⚠️ No camera detected! Please allow camera access.');
+                }
+            }
+
+            // ========== RENDER LOOP ==========
+            function renderLoop() {
+                if (!videoReady || !video.videoWidth) {
+                    animationFrame = requestAnimationFrame(renderLoop);
+                    return;
+                }
+                
+                // Draw video to canvas with filter
+                ctx.save();
+                ctx.filter = filterMap[currentFilter]?.css || '';
+                
+                // Mirror horizontally (selfie mode)
+                ctx.translate(canvas.width, 0);
+                ctx.scale(-1, 1);
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                ctx.restore();
+                
+                animationFrame = requestAnimationFrame(renderLoop);
+            }
+
+            // ========== CAPTURE ==========
+            async function capturePhoto() {
+                if (isCapturing || !videoReady) return;
+                isCapturing = true;
+                captureBtn.disabled = true;
+
+                // Countdown
+                countdownOverlay.classList.add('active');
+                for (let i = 3; i >= 1; i--) {
+                    countdownNumber.textContent = i;
+                    await sleep(800);
+                }
+                countdownNumber.textContent = '📸';
+                await sleep(300);
+                countdownOverlay.classList.remove('active');
+
+                // Flash
+                flashOverlay.classList.add('active');
+                await sleep(100);
+                flashOverlay.classList.remove('active');
+
+                // Capture from canvas (with current filter)
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = canvas.width;
+                tempCanvas.height = canvas.height;
+                const tempCtx = tempCanvas.getContext('2d');
+                
+                // Apply filter to captured image
+                tempCtx.filter = filterMap[currentFilter]?.css || '';
+                tempCtx.drawImage(canvas, 0, 0);
+                
+                const dataUrl = tempCanvas.toDataURL('image/jpeg', 0.95);
+                
+                // Add to gallery
+                addToGallery(dataUrl);
+                
+                // Auto download
+                downloadImage(dataUrl, `photobooth_${Date.now()}.jpg`);
+                
+                // Reset
+                isCapturing = false;
+                captureBtn.disabled = false;
+                console.log('📸 Photo captured!');
+            }
+
+            // ========== GALLERY ==========
+            function addToGallery(dataUrl) {
+                capturedPhotos.push(dataUrl);
+                renderGallery();
+            }
+
+            function renderGallery() {
+                galleryGrid.innerHTML = '';
+                if (capturedPhotos.length === 0) {
+                    emptyMsg.style.display = 'block';
+                    galleryCount.textContent = '0 photos';
+                    return;
+                }
+                emptyMsg.style.display = 'none';
+                galleryCount.textContent = `${capturedPhotos.length} photos`;
+
+                capturedPhotos.forEach((dataUrl, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'gallery-item';
+                    
+                    const img = document.createElement('img');
+                    img.src = dataUrl;
+                    img.alt = `Photo ${index + 1}`;
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'delete-btn';
+                    deleteBtn.textContent = '✕';
+                    deleteBtn.title = 'Delete';
+                    deleteBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        capturedPhotos.splice(index, 1);
+                        renderGallery();
+                    });
+                    
+                    // Click to preview (download)
+                    div.addEventListener('click', () => {
+                        downloadImage(dataUrl, `photobooth_${Date.now()}.jpg`);
+                    });
+                    
+                    div.appendChild(img);
+                    div.appendChild(deleteBtn);
+                    galleryGrid.appendChild(div);
+                });
+            }
+
+            // ========== DOWNLOAD ==========
+            function downloadImage(dataUrl, filename = 'photobooth.jpg') {
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = dataUrl;
+                link.click();
+            }
+
+            // ========== CLEAR ALL ==========
+            function clearAll() {
+                if (capturedPhotos.length === 0) return;
+                if (confirm('🗑️ Delete all photos?')) {
+                    capturedPhotos = [];
+                    renderGallery();
+                    console.log('🗑️ Gallery cleared!');
+                }
+            }
+
+            // ========== SLEEP UTILITY ==========
+            function sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            // ========== FILTER HANDLERS ==========
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.filter;
+                    filterNameEl.textContent = filterMap[currentFilter]?.label || 'ORIGINAL';
+                    console.log('🎨 Filter:', currentFilter);
+                });
+            });
+
+            // ========== EVENT LISTENERS ==========
+            captureBtn.addEventListener('click', capturePhoto);
+            
+            downloadBtn.addEventListener('click', () => {
+                if (capturedPhotos.length === 0) {
+                    alert('📸 No photos to download!');
+                    return;
+                }
+                const latest = capturedPhotos[capturedPhotos.length - 1];
+                downloadImage(latest, `photobooth_${Date.now()}.jpg`);
+            });
+            
+            clearBtn.addEventListener('click', clearAll);
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.key === ' ' || e.key === 'Enter') {
+                    e.preventDefault();
+                    capturePhoto();
+                }
+                if (e.key === 'd' || e.key === 'D') {
+                    downloadBtn.click();
+                }
+                if (e.key === 'c' || e.key === 'C') {
+                    clearBtn.click();
+                }
+            });
+
+            // ========== INIT ==========
+            initWebcam();
+
+            // Handle resize
+            window.addEventListener('resize', () => {
+                if (videoReady) {
+                    const rect = container.getBoundingClientRect();
+                    // Canvas size maintained by CSS
+                }
+            });
+
+            console.log('📸 PHOTOBOOTH FABLE 5 LOADED!');
+            console.log('🎯 Space/Enter = Capture | D = Download | C = Clear');
+            console.log('📸 Ready to shoot!');
+
+        })();
+    </script>
+
+</body>
+</html>
