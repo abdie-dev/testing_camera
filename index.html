@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>📸 PHOTOBOOTH · PINK</title>
+    <title>💗 PHOTOBOOTH · LOVE PINK</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* ===== FONTS ===== */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap');
 
         * {
             margin: 0;
@@ -17,25 +16,59 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #0d0d0d;
+            font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #fce4ec;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 16px;
+            padding: 12px;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        /* ===== MAIN CARD ===== */
+        /* ===== FLOATING HEARTS BACKGROUND ===== */
+        .hearts-bg {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .heart-float {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.15;
+            animation: floatHeart 20s infinite linear;
+            color: #e91e63;
+        }
+
+        @keyframes floatHeart {
+            0% { transform: translateY(100vh) rotate(0deg) scale(0.5); opacity: 0; }
+            10% { opacity: 0.15; }
+            90% { opacity: 0.15; }
+            100% { transform: translateY(-10vh) rotate(720deg) scale(1.5); opacity: 0; }
+        }
+
+        .heart-float:nth-child(1) { left: 5%; animation-duration: 18s; font-size: 2rem; }
+        .heart-float:nth-child(2) { left: 20%; animation-duration: 22s; font-size: 1.2rem; animation-delay: 3s; }
+        .heart-float:nth-child(3) { left: 40%; animation-duration: 25s; font-size: 2.5rem; animation-delay: 5s; }
+        .heart-float:nth-child(4) { left: 60%; animation-duration: 19s; font-size: 1.8rem; animation-delay: 2s; }
+        .heart-float:nth-child(5) { left: 80%; animation-duration: 23s; font-size: 1.4rem; animation-delay: 7s; }
+        .heart-float:nth-child(6) { left: 95%; animation-duration: 21s; font-size: 2rem; animation-delay: 4s; }
+
+        /* ===== APP CARD ===== */
         .app-card {
             max-width: 480px;
             width: 100%;
-            background: #1a1a1a;
+            background: #ffffff;
             border-radius: 40px;
-            padding: 24px 20px 28px;
-            box-shadow: 0 20px 60px rgba(255, 45, 120, 0.15), 0 0 80px rgba(255, 45, 120, 0.05);
-            border: 1px solid rgba(255, 45, 120, 0.15);
-            transition: all 0.3s;
+            padding: 20px 18px 24px;
+            box-shadow: 0 20px 60px rgba(233, 30, 99, 0.2), 0 0 80px rgba(233, 30, 99, 0.08);
+            border: 2px solid rgba(233, 30, 99, 0.1);
+            position: relative;
+            z-index: 1;
         }
 
         /* ===== HEADER ===== */
@@ -43,41 +76,47 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 18px;
-            padding: 0 4px;
+            margin-bottom: 14px;
+            padding: 0 2px;
         }
 
         .app-title {
             font-weight: 800;
-            font-size: 1.25rem;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #FF2D78, #FF6B9D);
+            font-size: 1.3rem;
+            color: #e91e63;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .app-title span {
+            background: linear-gradient(135deg, #e91e63, #f06292);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .app-badge {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             font-weight: 700;
-            color: #FF2D78;
-            background: rgba(255, 45, 120, 0.12);
+            color: #e91e63;
+            background: rgba(233, 30, 99, 0.1);
             padding: 4px 12px;
             border-radius: 20px;
+            border: 1px solid rgba(233, 30, 99, 0.15);
             letter-spacing: 0.5px;
-            border: 1px solid rgba(255, 45, 120, 0.2);
         }
 
-        /* ===== WEBCAM CONTAINER ===== */
+        /* ===== CAMERA ===== */
         .camera-wrapper {
             position: relative;
             border-radius: 24px;
             overflow: hidden;
-            background: #111;
+            background: #fce4ec;
             aspect-ratio: 4 / 3;
             width: 100%;
-            border: 2px solid rgba(255, 45, 120, 0.2);
-            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
+            border: 3px solid rgba(233, 30, 99, 0.2);
+            box-shadow: inset 0 0 40px rgba(233, 30, 99, 0.05);
         }
 
         .camera-wrapper video {
@@ -97,7 +136,6 @@
             pointer-events: none;
         }
 
-        /* Mirror toggle: flip via CSS class on video + canvas */
         .camera-wrapper.mirror-on video,
         .camera-wrapper.mirror-on canvas {
             transform: scaleX(-1);
@@ -110,13 +148,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0, 0, 0, 0.55);
+            background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(6px);
             -webkit-backdrop-filter: blur(6px);
             z-index: 20;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.25s ease;
+            border-radius: 24px;
         }
 
         .overlay-countdown.active {
@@ -125,15 +164,15 @@
         }
 
         .countdown-number {
-            font-size: 8rem;
+            font-size: 7rem;
             font-weight: 800;
             color: #fff;
-            text-shadow: 0 0 60px rgba(255, 45, 120, 0.7), 0 0 120px rgba(255, 45, 120, 0.3);
-            animation: pulse 0.7s ease-in-out infinite alternate;
-            font-family: 'Inter', sans-serif;
+            text-shadow: 0 0 60px rgba(233, 30, 99, 0.6), 0 0 120px rgba(233, 30, 99, 0.3);
+            animation: pulseCount 0.7s ease-in-out infinite alternate;
+            font-family: 'Quicksand', sans-serif;
         }
 
-        @keyframes pulse {
+        @keyframes pulseCount {
             0% { transform: scale(1); opacity: 1; }
             100% { transform: scale(1.15); opacity: 0.5; }
         }
@@ -141,11 +180,12 @@
         .overlay-flash {
             position: absolute;
             inset: 0;
-            background: white;
+            background: #fff;
             z-index: 30;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.05s;
+            border-radius: 24px;
         }
 
         .overlay-flash.active {
@@ -153,32 +193,32 @@
             transition: opacity 0s;
         }
 
-        /* Status dot */
+        /* ===== STATUS BADGE ===== */
         .status-badge {
             position: absolute;
-            bottom: 14px;
-            left: 14px;
+            bottom: 12px;
+            left: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(0, 0, 0, 0.6);
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            padding: 6px 14px 6px 10px;
+            padding: 5px 12px 5px 8px;
             border-radius: 30px;
             border: 1px solid rgba(255, 255, 255, 0.06);
             z-index: 10;
         }
 
         .status-dot {
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
             background: #4ade80;
-            animation: blink 1.2s infinite;
+            animation: blinkDot 1.2s infinite;
         }
 
-        @keyframes blink {
+        @keyframes blinkDot {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.2; }
         }
@@ -189,59 +229,160 @@
         }
 
         .status-label {
-            font-size: 0.6rem;
+            font-size: 0.5rem;
             font-weight: 700;
             color: #fff;
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
 
-        /* Filter label */
+        /* ===== FILTER LABEL ===== */
         .filter-label {
             position: absolute;
-            bottom: 14px;
-            right: 14px;
-            background: rgba(0, 0, 0, 0.6);
+            bottom: 12px;
+            right: 12px;
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            padding: 6px 14px;
+            padding: 5px 12px;
             border-radius: 30px;
             border: 1px solid rgba(255, 255, 255, 0.06);
             z-index: 10;
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             font-weight: 700;
             color: #fff;
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
 
-        /* ===== CONTROLS ROW ===== */
+        /* ===== TOGGLES ===== */
+        .toggle-row {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .toggle-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: #888;
+            cursor: pointer;
+            user-select: none;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .toggle-item input[type="checkbox"] {
+            display: none;
+        }
+
+        .toggle-track {
+            width: 36px;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            position: relative;
+            transition: all 0.3s;
+            flex-shrink: 0;
+            border: 1.5px solid #e0e0e0;
+        }
+
+        .toggle-track .toggle-thumb {
+            width: 14px;
+            height: 14px;
+            background: #ccc;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s;
+        }
+
+        .toggle-item input:checked + .toggle-track {
+            background: #fce4ec;
+            border-color: #e91e63;
+        }
+
+        .toggle-item input:checked + .toggle-track .toggle-thumb {
+            left: 18px;
+            background: #e91e63;
+            box-shadow: 0 0 20px rgba(233, 30, 99, 0.3);
+        }
+
+        /* ===== FILTERS ===== */
+        .filters-scroll {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 4px 0 12px 0;
+            margin-top: 12px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .filters-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-chip {
+            flex: 0 0 auto;
+            padding: 6px 16px;
+            border-radius: 40px;
+            border: 1.5px solid rgba(233, 30, 99, 0.1);
+            background: rgba(233, 30, 99, 0.04);
+            color: #888;
+            font-size: 0.6rem;
+            font-weight: 600;
+            font-family: 'Quicksand', sans-serif;
+            cursor: pointer;
+            transition: all 0.25s;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .filter-chip:active {
+            transform: scale(0.94);
+        }
+
+        .filter-chip.active {
+            border-color: #e91e63;
+            color: #e91e63;
+            background: rgba(233, 30, 99, 0.1);
+            box-shadow: 0 0 24px rgba(233, 30, 99, 0.08);
+        }
+
+        /* ===== CONTROLS ===== */
         .controls-row {
             display: flex;
-            gap: 10px;
-            margin-top: 18px;
+            gap: 8px;
+            margin-top: 14px;
             flex-wrap: wrap;
             justify-content: center;
         }
 
         .btn-capture {
             flex: 1;
-            min-width: 140px;
-            background: linear-gradient(135deg, #FF2D78, #FF6B9D);
+            min-width: 120px;
+            background: linear-gradient(135deg, #e91e63, #f06292);
             color: #fff;
             border: none;
             padding: 14px 20px;
             border-radius: 60px;
             font-weight: 700;
-            font-size: 0.95rem;
-            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-family: 'Quicksand', sans-serif;
             cursor: pointer;
             transition: all 0.25s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            box-shadow: 0 4px 24px rgba(255, 45, 120, 0.3);
+            box-shadow: 0 4px 24px rgba(233, 30, 99, 0.25);
             letter-spacing: 0.3px;
         }
 
@@ -258,110 +399,66 @@
 
         .btn-outline {
             background: transparent;
-            border: 1.5px solid rgba(255, 255, 255, 0.12);
-            color: #ccc;
-            padding: 12px 16px;
+            border: 1.5px solid rgba(233, 30, 99, 0.15);
+            color: #888;
+            padding: 12px 14px;
             border-radius: 60px;
             font-weight: 600;
-            font-size: 0.8rem;
-            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-family: 'Quicksand', sans-serif;
             cursor: pointer;
             transition: all 0.25s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            min-width: 48px;
+            gap: 4px;
+            min-width: 44px;
             flex: 0 1 auto;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(233, 30, 99, 0.03);
         }
 
         .btn-outline:active {
             transform: scale(0.94);
         }
 
-        .btn-outline.active {
-            border-color: #FF2D78;
-            color: #FF2D78;
-            background: rgba(255, 45, 120, 0.08);
-        }
-
-        /* ===== FILTERS ROW ===== */
-        .filters-scroll {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding: 4px 0 12px 0;
-            margin-top: 16px;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-
-        .filters-scroll::-webkit-scrollbar {
-            display: none;
-        }
-
-        .filter-chip {
-            flex: 0 0 auto;
-            padding: 7px 18px;
-            border-radius: 40px;
-            border: 1.5px solid rgba(255, 255, 255, 0.08);
-            background: rgba(255, 255, 255, 0.03);
-            color: #888;
-            font-size: 0.65rem;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-            cursor: pointer;
-            transition: all 0.25s;
-            white-space: nowrap;
-            letter-spacing: 0.3px;
-            text-transform: uppercase;
-        }
-
-        .filter-chip:active {
-            transform: scale(0.94);
-        }
-
-        .filter-chip.active {
-            border-color: #FF2D78;
-            color: #fff;
-            background: rgba(255, 45, 120, 0.15);
-            box-shadow: 0 0 24px rgba(255, 45, 120, 0.15);
+        .btn-outline:hover {
+            border-color: #e91e63;
+            color: #e91e63;
         }
 
         /* ===== GALLERY ===== */
         .gallery-section {
-            margin-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 16px;
+            margin-top: 16px;
+            border-top: 1.5px solid rgba(233, 30, 99, 0.08);
+            padding-top: 14px;
         }
 
         .gallery-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .gallery-header h3 {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 700;
-            color: #aaa;
+            color: #e91e63;
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
 
         .gallery-header span {
-            font-size: 0.6rem;
-            color: #666;
+            font-size: 0.55rem;
+            color: #aaa;
             font-weight: 600;
         }
 
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            max-height: 140px;
+            gap: 6px;
+            max-height: 120px;
             overflow-y: auto;
             padding-right: 2px;
         }
@@ -375,7 +472,7 @@
         }
 
         .gallery-grid::-webkit-scrollbar-thumb {
-            background: #FF2D78;
+            background: #e91e63;
             border-radius: 10px;
         }
 
@@ -384,8 +481,8 @@
             border-radius: 12px;
             overflow: hidden;
             aspect-ratio: 4 / 3;
-            background: #1a1a1a;
-            border: 1.5px solid rgba(255, 255, 255, 0.04);
+            background: #fce4ec;
+            border: 1.5px solid rgba(233, 30, 99, 0.08);
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -402,17 +499,17 @@
 
         .gallery-item .delete-btn {
             position: absolute;
-            top: 4px;
-            right: 4px;
-            width: 22px;
-            height: 22px;
+            top: 3px;
+            right: 3px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
             border: none;
             color: #fff;
-            font-size: 12px;
+            font-size: 10px;
             cursor: pointer;
             opacity: 0;
             transition: opacity 0.2s;
@@ -427,169 +524,155 @@
         }
 
         .gallery-item .delete-btn:active {
-            background: #FF2D78;
+            background: #e91e63;
         }
 
         .empty-gallery {
             text-align: center;
-            color: #444;
-            font-size: 0.7rem;
+            color: #ccc;
+            font-size: 0.6rem;
             font-weight: 500;
-            padding: 16px 0;
+            padding: 14px 0;
             grid-column: 1 / -1;
-        }
-
-        /* ===== TOGGLE ROW ===== */
-        .toggle-row {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            margin-top: 12px;
-            flex-wrap: wrap;
-        }
-
-        .toggle-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            color: #888;
-            cursor: pointer;
-            user-select: none;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .toggle-item input[type="checkbox"] {
-            display: none;
-        }
-
-        .toggle-track {
-            width: 40px;
-            height: 22px;
-            background: #2a2a2a;
-            border-radius: 20px;
-            position: relative;
-            transition: all 0.3s;
-            flex-shrink: 0;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .toggle-track .toggle-thumb {
-            width: 16px;
-            height: 16px;
-            background: #555;
-            border-radius: 50%;
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            transition: all 0.3s;
-        }
-
-        .toggle-item input:checked + .toggle-track {
-            background: rgba(255, 45, 120, 0.25);
-            border-color: #FF2D78;
-        }
-
-        .toggle-item input:checked + .toggle-track .toggle-thumb {
-            left: 20px;
-            background: #FF2D78;
-            box-shadow: 0 0 20px rgba(255, 45, 120, 0.4);
         }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 480px) {
             .app-card {
-                padding: 16px 14px 20px;
+                padding: 14px 12px 18px;
                 border-radius: 28px;
             }
             .countdown-number {
                 font-size: 5rem;
             }
             .btn-capture {
-                font-size: 0.8rem;
-                padding: 12px 16px;
-                min-width: 100px;
+                font-size: 0.75rem;
+                padding: 12px 14px;
+                min-width: 90px;
             }
             .btn-outline {
-                padding: 10px 12px;
-                font-size: 0.7rem;
+                padding: 10px 10px;
+                font-size: 0.65rem;
+                min-width: 38px;
             }
             .gallery-grid {
                 grid-template-columns: repeat(4, 1fr);
-                max-height: 110px;
+                max-height: 100px;
             }
             .filter-chip {
-                font-size: 0.55rem;
-                padding: 5px 14px;
+                font-size: 0.5rem;
+                padding: 5px 12px;
             }
             .app-title {
-                font-size: 1rem;
+                font-size: 1.1rem;
+            }
+            .toggle-item {
+                font-size: 0.55rem;
+            }
+            .toggle-track {
+                width: 32px;
+                height: 18px;
+            }
+            .toggle-track .toggle-thumb {
+                width: 12px;
+                height: 12px;
+            }
+            .toggle-item input:checked + .toggle-track .toggle-thumb {
+                left: 16px;
             }
         }
 
         @media (max-width: 380px) {
             .controls-row {
-                gap: 6px;
+                gap: 4px;
             }
             .btn-capture {
-                font-size: 0.7rem;
-                padding: 10px 12px;
-                min-width: 80px;
+                font-size: 0.65rem;
+                padding: 10px 10px;
+                min-width: 70px;
             }
             .btn-outline {
-                padding: 8px 10px;
-                font-size: 0.6rem;
-                min-width: 40px;
+                padding: 8px 8px;
+                font-size: 0.55rem;
+                min-width: 34px;
             }
             .gallery-grid {
                 grid-template-columns: repeat(3, 1fr);
-                max-height: 100px;
+                max-height: 90px;
+            }
+            .countdown-number {
+                font-size: 4rem;
             }
         }
 
         @media (min-width: 768px) {
             .app-card {
                 max-width: 520px;
-                padding: 32px 28px 32px;
-                border-radius: 48px;
+                padding: 28px 24px 30px;
+                border-radius: 44px;
             }
             .countdown-number {
-                font-size: 10rem;
+                font-size: 9rem;
             }
             .gallery-grid {
-                grid-template-columns: repeat(4, 1fr);
-                max-height: 160px;
+                max-height: 140px;
             }
         }
 
-        /* Landscape phone fix */
         @media (max-height: 600px) and (orientation: landscape) {
             .app-card {
                 max-width: 400px;
-                padding: 12px 16px 16px;
+                padding: 10px 14px 14px;
+                border-radius: 24px;
             }
             .camera-wrapper {
                 aspect-ratio: 16 / 9;
             }
             .gallery-grid {
-                max-height: 80px;
+                max-height: 70px;
             }
             .countdown-number {
-                font-size: 4rem;
+                font-size: 3.5rem;
+            }
+            .controls-row {
+                margin-top: 8px;
+            }
+            .gallery-section {
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+            .filters-scroll {
+                margin-top: 6px;
+                padding-bottom: 6px;
+            }
+            .toggle-row {
+                margin-top: 6px;
             }
         }
     </style>
 </head>
 <body>
 
+    <!-- ===== FLOATING HEARTS ===== -->
+    <div class="hearts-bg">
+        <span class="heart-float">❤️</span>
+        <span class="heart-float">💗</span>
+        <span class="heart-float">💖</span>
+        <span class="heart-float">💕</span>
+        <span class="heart-float">❤️</span>
+        <span class="heart-float">💗</span>
+    </div>
+
     <!-- ===== APP CARD ===== -->
     <div class="app-card">
 
         <!-- HEADER -->
         <div class="app-header">
-            <span class="app-title">📸 PHOTOBOOTH</span>
-            <span class="app-badge">FABLE 5</span>
+            <div class="app-title">
+                <span>📸 PHOTOBOOTH</span>
+                <span>💗</span>
+            </div>
+            <span class="app-badge">LOVE PINK</span>
         </div>
 
         <!-- CAMERA -->
@@ -638,7 +721,8 @@
             <button class="filter-chip" data-filter="blur">Blur</button>
             <button class="filter-chip" data-filter="vintage">Vintage</button>
             <button class="filter-chip" data-filter="neon">Neon</button>
-            <button class="filter-chip" data-filter="pink">Pink Tint</button>
+            <button class="filter-chip" data-filter="pink">💗 Pink</button>
+            <button class="filter-chip" data-filter="love">💕 Love</button>
         </div>
 
         <!-- CONTROLS -->
@@ -651,17 +735,17 @@
         <!-- GALLERY -->
         <div class="gallery-section">
             <div class="gallery-header">
-                <h3>📷 Gallery</h3>
+                <h3>💗 Gallery</h3>
                 <span id="galleryCount">0 photos</span>
             </div>
             <div class="gallery-grid" id="galleryGrid">
-                <div class="empty-gallery">No photos yet. Capture one!</div>
+                <div class="empty-gallery">No photos yet. Capture one! 💕</div>
             </div>
         </div>
 
     </div>
 
-    <!-- ===== JAVASCRIPT ===== -->
+    <!-- ===== JAVASCRIPT - MANUAL FILTERS ===== -->
     <script>
         (function() {
             'use strict';
@@ -704,17 +788,133 @@
             let canvasWidth = 640;
             let canvasHeight = 480;
 
-            // ========== FILTER MAP ==========
-            const filters = {
-                none: { label: 'ORIGINAL', css: '' },
-                grayscale: { label: 'GRAYSCALE', css: 'grayscale(100%)' },
-                sepia: { label: 'SEPIA', css: 'sepia(100%)' },
-                invert: { label: 'INVERT', css: 'invert(100%)' },
-                blur: { label: 'BLUR', css: 'blur(3px)' },
-                vintage: { label: 'VINTAGE', css: 'sepia(60%) contrast(1.2) brightness(0.9)' },
-                neon: { label: 'NEON', css: 'saturate(220%) contrast(1.4) brightness(1.05)' },
-                pink: { label: 'PINK TINT', css: 'sepia(30%) saturate(180%) hue-rotate(320deg)' }
-            };
+            // ========== MANUAL FILTER FUNCTIONS ==========
+            // These process pixel data directly - works on ALL devices!
+
+            function applyFilter(imageData, filterName) {
+                const data = imageData.data;
+                const len = data.length;
+
+                switch (filterName) {
+                    case 'none':
+                        break;
+
+                    case 'grayscale':
+                        for (let i = 0; i < len; i += 4) {
+                            const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+                            data[i] = data[i + 1] = data[i + 2] = gray;
+                        }
+                        break;
+
+                    case 'sepia':
+                        for (let i = 0; i < len; i += 4) {
+                            const r = data[i],
+                                g = data[i + 1],
+                                b = data[i + 2];
+                            data[i] = Math.min(255, r * 0.393 + g * 0.769 + b * 0.189);
+                            data[i + 1] = Math.min(255, r * 0.349 + g * 0.686 + b * 0.168);
+                            data[i + 2] = Math.min(255, r * 0.272 + g * 0.534 + b * 0.131);
+                        }
+                        break;
+
+                    case 'invert':
+                        for (let i = 0; i < len; i += 4) {
+                            data[i] = 255 - data[i];
+                            data[i + 1] = 255 - data[i + 1];
+                            data[i + 2] = 255 - data[i + 2];
+                        }
+                        break;
+
+                    case 'blur':
+                        // Simple box blur (3x3)
+                        const temp = new Uint8ClampedArray(data);
+                        const w = imageData.width;
+                        const h = imageData.height;
+                        for (let y = 1; y < h - 1; y++) {
+                            for (let x = 1; x < w - 1; x++) {
+                                const idx = (y * w + x) * 4;
+                                let r = 0,
+                                    g = 0,
+                                    b = 0;
+                                for (let dy = -1; dy <= 1; dy++) {
+                                    for (let dx = -1; dx <= 1; dx++) {
+                                        const nIdx = ((y + dy) * w + (x + dx)) * 4;
+                                        r += temp[nIdx];
+                                        g += temp[nIdx + 1];
+                                        b += temp[nIdx + 2];
+                                    }
+                                }
+                                data[idx] = r / 9;
+                                data[idx + 1] = g / 9;
+                                data[idx + 2] = b / 9;
+                            }
+                        }
+                        break;
+
+                    case 'vintage':
+                        for (let i = 0; i < len; i += 4) {
+                            const r = data[i],
+                                g = data[i + 1],
+                                b = data[i + 2];
+                            data[i] = Math.min(255, r * 0.8 + g * 0.6 + b * 0.2);
+                            data[i + 1] = Math.min(255, r * 0.5 + g * 0.7 + b * 0.3);
+                            data[i + 2] = Math.min(255, r * 0.3 + g * 0.5 + b * 0.6);
+                            // Add some grain
+                            const grain = (Math.random() - 0.5) * 12;
+                            data[i] = Math.max(0, Math.min(255, data[i] + grain));
+                            data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + grain));
+                            data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + grain));
+                        }
+                        break;
+
+                    case 'neon':
+                        for (let i = 0; i < len; i += 4) {
+                            data[i] = Math.min(255, data[i] * 1.8);
+                            data[i + 1] = Math.min(255, data[i + 1] * 1.0);
+                            data[i + 2] = Math.min(255, data[i + 2] * 1.4);
+                        }
+                        break;
+
+                    case 'pink':
+                        for (let i = 0; i < len; i += 4) {
+                            // Add pink tint
+                            const r = data[i],
+                                g = data[i + 1],
+                                b = data[i + 2];
+                            data[i] = Math.min(255, r * 1.1);
+                            data[i + 1] = Math.min(255, g * 0.8);
+                            data[i + 2] = Math.min(255, b * 0.9 + 30);
+                        }
+                        break;
+
+                    case 'love':
+                        for (let i = 0; i < len; i += 4) {
+                            const r = data[i],
+                                g = data[i + 1],
+                                b = data[i + 2];
+                            // Warm pink + soft
+                            data[i] = Math.min(255, r * 1.2 + 20);
+                            data[i + 1] = Math.min(255, g * 0.7 + 10);
+                            data[i + 2] = Math.min(255, b * 0.6 + 40);
+                            // Soft vignette (applied per pixel)
+                            const x = (i / 4) % imageData.width;
+                            const y = Math.floor((i / 4) / imageData.width);
+                            const cx = imageData.width / 2;
+                            const cy = imageData.height / 2;
+                            const dist = Math.sqrt((x - cx) ** 2 + (y - cy) ** 2);
+                            const maxDist = Math.sqrt(cx ** 2 + cy ** 2);
+                            const vignette = 1 - (dist / maxDist) * 0.3;
+                            data[i] = Math.min(255, data[i] * vignette);
+                            data[i + 1] = Math.min(255, data[i + 1] * vignette);
+                            data[i + 2] = Math.min(255, data[i + 2] * vignette);
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+                return imageData;
+            }
 
             // ========== CAMERA INIT ==========
             async function initCamera() {
@@ -722,8 +922,8 @@
                     stream = await navigator.mediaDevices.getUserMedia({
                         video: {
                             facingMode: 'user',
-                            width: { ideal: 1280 },
-                            height: { ideal: 720 }
+                            width: { ideal: 640 },
+                            height: { ideal: 480 }
                         },
                         audio: false
                     });
@@ -731,17 +931,16 @@
                     await video.play();
                     videoReady = true;
 
-                    // Set canvas size
-                    const vw = video.videoWidth || 1280;
-                    const vh = video.videoHeight || 720;
-                    canvasWidth = vw;
-                    canvasHeight = vh;
-                    canvas.width = vw;
-                    canvas.height = vh;
+                    const vw = video.videoWidth || 640;
+                    const vh = video.videoHeight || 480;
+                    canvasWidth = Math.min(vw, 640);
+                    canvasHeight = Math.min(vh, 480);
+                    canvas.width = canvasWidth;
+                    canvas.height = canvasHeight;
 
                     statusDot.className = 'status-dot';
                     statusLabel.textContent = 'LIVE';
-                    console.log('📸 Camera ready');
+                    console.log('📸 Camera ready!');
                     startRender();
                 } catch (err) {
                     console.error('Camera error:', err);
@@ -763,19 +962,21 @@
                     return;
                 }
 
-                const filter = filters[currentFilter]?.css || '';
+                // Draw video to canvas with mirror
                 ctx.save();
-
-                // Mirror via canvas transform (if mirror is ON)
                 if (isMirror) {
                     ctx.translate(canvas.width, 0);
                     ctx.scale(-1, 1);
                 }
-
-                // Apply filter
-                ctx.filter = filter;
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
                 ctx.restore();
+
+                // Apply manual filter via pixel processing
+                if (currentFilter !== 'none') {
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    applyFilter(imageData, currentFilter);
+                    ctx.putImageData(imageData, 0, 0);
+                }
 
                 animFrame = requestAnimationFrame(render);
             }
@@ -792,7 +993,7 @@
                     countdownNumber.textContent = i;
                     await sleep(700);
                 }
-                countdownNumber.textContent = '📸';
+                countdownNumber.textContent = '💗';
                 await sleep(250);
                 countdownOverlay.classList.remove('active');
 
@@ -803,30 +1004,24 @@
                     flashOverlay.classList.remove('active');
                 }
 
-                // Capture from canvas
+                // Capture from canvas with current filter applied
                 const tempCanvas = document.createElement('canvas');
                 tempCanvas.width = canvas.width;
                 tempCanvas.height = canvas.height;
                 const tCtx = tempCanvas.getContext('2d');
+                tCtx.drawImage(canvas, 0, 0);
 
-                const filter = filters[currentFilter]?.css || '';
-                tCtx.filter = filter;
-
-                // Apply mirror if needed (same as render)
-                if (isMirror) {
-                    tCtx.translate(canvas.width, 0);
-                    tCtx.scale(-1, 1);
+                // Apply filter one more time for consistency
+                if (currentFilter !== 'none') {
+                    const imgData = tCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+                    applyFilter(imgData, currentFilter);
+                    tCtx.putImageData(imgData, 0, 0);
                 }
-                tCtx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                tCtx.restore();
 
-                const dataUrl = tempCanvas.toDataURL('image/jpeg', 0.94);
+                const dataUrl = tempCanvas.toDataURL('image/jpeg', 0.92);
 
-                // Add to gallery
                 photos.push(dataUrl);
                 renderGallery();
-
-                // Auto download
                 downloadImage(dataUrl, `photobooth_${Date.now()}.jpg`);
 
                 isCapturing = false;
@@ -838,7 +1033,7 @@
             function renderGallery() {
                 galleryGrid.innerHTML = '';
                 if (photos.length === 0) {
-                    galleryGrid.innerHTML = '<div class="empty-gallery">No photos yet. Capture one!</div>';
+                    galleryGrid.innerHTML = '<div class="empty-gallery">No photos yet. Capture one! 💕</div>';
                     galleryCount.textContent = '0 photos';
                     return;
                 }
@@ -902,19 +1097,29 @@
                     filterChips.forEach(c => c.classList.remove('active'));
                     this.classList.add('active');
                     currentFilter = this.dataset.filter;
-                    filterLabel.textContent = filters[currentFilter]?.label || 'ORIGINAL';
+                    const labels = {
+                        none: 'ORIGINAL',
+                        grayscale: 'GRAYSCALE',
+                        sepia: 'SEPIA',
+                        invert: 'INVERT',
+                        blur: 'BLUR',
+                        vintage: 'VINTAGE',
+                        neon: 'NEON',
+                        pink: '💗 PINK',
+                        love: '💕 LOVE'
+                    };
+                    filterLabel.textContent = labels[currentFilter] || 'ORIGINAL';
                     console.log('🎨 Filter:', currentFilter);
                 });
             });
 
-            // ========== MIRROR TOGGLE ==========
+            // ========== TOGGLES ==========
             mirrorToggle.addEventListener('change', function() {
                 isMirror = this.checked;
                 wrapper.classList.toggle('mirror-on', isMirror);
                 console.log('🪞 Mirror:', isMirror ? 'ON' : 'OFF');
             });
 
-            // ========== FLASH TOGGLE ==========
             flashToggle.addEventListener('change', function() {
                 useFlash = this.checked;
                 console.log('⚡ Flash:', useFlash ? 'ON' : 'OFF');
@@ -943,17 +1148,13 @@
                 if (e.key === 'c' || e.key === 'C') clearBtn.click();
             });
 
-            // ========== RESIZE HANDLER ==========
-            function handleResize() {
-                // Canvas dimensions are fixed; video scales via CSS
-            }
-
             // ========== INIT ==========
             initCamera();
 
-            console.log('📸 PHOTOBOOTH PINK · FABLE 5');
+            console.log('💗 PHOTOBOOTH LOVE PINK · FABLE 5');
             console.log('🎯 Space/Enter = Capture | D = Download | C = Clear');
-            console.log('🪞 Mirror toggle available | ⚡ Flash toggle available');
+            console.log('🪞 Mirror toggle | ⚡ Flash toggle');
+            console.log('🎨 Manual pixel filters - works on ALL devices!');
 
         })();
     </script>
