@@ -27,7 +27,6 @@
             overflow-x: hidden;
         }
 
-        /* ===== FLOATING HEARTS ===== */
         .hearts-bg {
             position: fixed;
             inset: 0;
@@ -55,7 +54,6 @@
         .heart-float:nth-child(5) { left: 80%; animation-duration: 23s; font-size: 1.4rem; animation-delay: 7s; }
         .heart-float:nth-child(6) { left: 95%; animation-duration: 21s; font-size: 2rem; animation-delay: 4s; }
 
-        /* ===== APP CARD ===== */
         .app-card {
             max-width: 480px;
             width: 100%;
@@ -99,7 +97,6 @@
             border: 1px solid rgba(233, 30, 99, 0.15);
         }
 
-        /* ===== CAMERA ===== */
         .camera-wrapper {
             position: relative;
             border-radius: 24px;
@@ -125,13 +122,16 @@
             object-fit: cover;
             pointer-events: none;
         }
-        /* MIRROR OFF by default - preview normal */
+        /* DEFAULT MIRROR ON (selfie mode) */
         .camera-wrapper.mirror-on video,
         .camera-wrapper.mirror-on canvas {
             transform: scaleX(-1);
         }
+        /* Default: mirror-on class ada */
+        .camera-wrapper {
+            /* mirror on by default via class below */;
+        }
 
-        /* ===== OVERLAYS ===== */
         .overlay-countdown {
             position: absolute;
             inset: 0;
@@ -234,7 +234,6 @@
             text-transform: uppercase;
         }
 
-        /* ===== TOGGLES ===== */
         .toggle-row {
             display: flex;
             gap: 16px;
@@ -286,7 +285,6 @@
             box-shadow: 0 0 20px rgba(233, 30, 99, 0.3);
         }
 
-        /* ===== FILTERS ===== */
         .filters-scroll {
             display: flex;
             gap: 6px;
@@ -325,7 +323,6 @@
             box-shadow: 0 0 24px rgba(233, 30, 99, 0.08);
         }
 
-        /* ===== CONTROLS ===== */
         .controls-row {
             display: flex;
             gap: 8px;
@@ -389,7 +386,6 @@
             color: #e91e63;
         }
 
-        /* ===== CAROUSEL ===== */
         .carousel-section {
             margin-top: 16px;
             border-top: 1.5px solid rgba(233, 30, 99, 0.08);
@@ -422,14 +418,12 @@
             aspect-ratio: 4 / 3;
             border: 2px solid rgba(233, 30, 99, 0.1);
         }
-
         .carousel-track {
             display: flex;
             transition: transform 0.4s ease;
             height: 100%;
             width: 100%;
         }
-
         .carousel-slide {
             min-width: 100%;
             height: 100%;
@@ -439,7 +433,6 @@
             justify-content: center;
             background: #fce4ec;
         }
-
         .carousel-slide img {
             width: 100%;
             height: 100%;
@@ -447,7 +440,6 @@
             border-radius: 12px;
         }
 
-        /* LOVE FRAME OVERLAY di carousel */
         .love-frame-overlay {
             position: absolute;
             inset: 0;
@@ -457,7 +449,6 @@
             justify-content: center;
             border-radius: 12px;
         }
-
         .love-frame-overlay svg {
             width: 100%;
             height: 100%;
@@ -465,28 +456,6 @@
             inset: 0;
         }
 
-        .love-frame-overlay .frame-text {
-            position: absolute;
-            bottom: 18px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #e91e63;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 255, 255, 0.6);
-            letter-spacing: 1px;
-            background: rgba(255, 255, 255, 0.6);
-            padding: 4px 12px;
-            border-radius: 20px;
-            display: inline-block;
-            width: auto;
-            margin: 0 auto;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-        }
-
-        /* Carousel buttons */
         .carousel-btn {
             position: absolute;
             top: 50%;
@@ -558,7 +527,6 @@
             font-size: 2rem;
         }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 480px) {
             .app-card { padding: 14px 12px 18px; border-radius: 28px; }
             .countdown-number { font-size: 5rem; }
@@ -571,7 +539,6 @@
             .toggle-track .toggle-thumb { width: 12px; height: 12px; }
             .toggle-item input:checked + .toggle-track .toggle-thumb { left: 16px; }
             .carousel-btn { width: 26px; height: 26px; font-size: 0.7rem; }
-            .love-frame-overlay .frame-text { font-size: 0.6rem; bottom: 12px; padding: 3px 10px; }
         }
         @media (max-width: 380px) {
             .controls-row { gap: 4px; }
@@ -597,7 +564,6 @@
 </head>
 <body>
 
-    <!-- ===== FLOATING HEARTS ===== -->
     <div class="hearts-bg">
         <span class="heart-float">❤️</span>
         <span class="heart-float">💗</span>
@@ -607,20 +573,15 @@
         <span class="heart-float">💗</span>
     </div>
 
-    <!-- ===== APP CARD ===== -->
     <div class="app-card">
 
-        <!-- HEADER -->
         <div class="app-header">
-            <div class="app-title">
-                <span>📸 PHOTOBOOTH</span>
-                <span>💗</span>
-            </div>
+            <div class="app-title"><span>📸 PHOTOBOOTH</span><span>💗</span></div>
             <span class="app-badge">LOVE FRAME</span>
         </div>
 
-        <!-- CAMERA -->
-        <div class="camera-wrapper" id="cameraWrapper">
+        <!-- CAMERA - DEFAULT MIRROR ON (selfie mode) -->
+        <div class="camera-wrapper mirror-on" id="cameraWrapper">
             <video id="video" autoplay playsinline muted></video>
             <canvas id="filterCanvas"></canvas>
 
@@ -639,7 +600,7 @@
         <!-- TOGGLES -->
         <div class="toggle-row">
             <label class="toggle-item">
-                <input type="checkbox" id="mirrorToggle" />
+                <input type="checkbox" id="mirrorToggle" checked />
                 <span class="toggle-track"><span class="toggle-thumb"></span></span>
                 <span>🪞 Mirror</span>
             </label>
@@ -675,7 +636,7 @@
             <button class="btn-outline" id="clearBtn" title="Clear all">🗑️</button>
         </div>
 
-        <!-- ===== CAROUSEL ===== -->
+        <!-- CAROUSEL -->
         <div class="carousel-section">
             <div class="carousel-header">
                 <h3>💗 Gallery · Carousel</h3>
@@ -698,12 +659,10 @@
 
     </div>
 
-    <!-- ===== JAVASCRIPT ===== -->
     <script>
         (function() {
             'use strict';
 
-            // ========== DOM ==========
             const video = document.getElementById('video');
             const canvas = document.getElementById('filterCanvas');
             const ctx = canvas.getContext('2d');
@@ -733,11 +692,10 @@
             const carouselDots = document.getElementById('carouselDots');
             const carouselCount = document.getElementById('carouselCount');
 
-            // ========== STATE ==========
             let stream = null;
             let currentFilter = 'none';
             let isCapturing = false;
-            let isMirror = false; // DEFAULT: NORMAL (ga mirror)
+            let isMirror = true; // DEFAULT: MIRROR ON (selfie mode)
             let useFlash = true;
             let useFrame = true;
             let photos = [];
@@ -861,16 +819,13 @@
             function drawLoveFrame(ctx, w, h) {
                 if (!useFrame) return;
                 const padding = 12;
-                const cornerSize = 30;
                 const heartSize = 28;
 
-                // Border pink
                 ctx.strokeStyle = 'rgba(233, 30, 99, 0.5)';
                 ctx.lineWidth = 4;
                 ctx.setLineDash([]);
                 ctx.strokeRect(padding, padding, w - padding * 2, h - padding * 2);
 
-                // Corner hearts
                 const corners = [
                     [padding + 6, padding + 6],
                     [w - padding - 6, padding + 6],
@@ -888,7 +843,6 @@
                 });
                 ctx.shadowBlur = 0;
 
-                // Bottom text
                 ctx.font = '600 14px Quicksand, sans-serif';
                 ctx.fillStyle = 'rgba(233, 30, 99, 0.7)';
                 ctx.textAlign = 'center';
@@ -920,7 +874,7 @@
 
                     statusDot.className = 'status-dot';
                     statusLabel.textContent = 'LIVE';
-                    console.log('📸 Camera ready!');
+                    console.log('📸 Camera ready! Default: MIRROR ON (selfie mode)');
                     startRender();
                 } catch (err) {
                     console.error('Camera error:', err);
@@ -982,13 +936,12 @@
                     flashOverlay.classList.remove('active');
                 }
 
-                // CAPTURE dengan semua effect + frame
                 const tempCanvas = document.createElement('canvas');
                 tempCanvas.width = canvas.width;
                 tempCanvas.height = canvas.height;
                 const tCtx = tempCanvas.getContext('2d');
 
-                // 1. Draw video dengan mirror
+                // 1. Draw video with mirror (if on)
                 tCtx.save();
                 if (isMirror) {
                     tCtx.translate(canvas.width, 0);
@@ -1015,7 +968,7 @@
 
                 isCapturing = false;
                 captureBtn.disabled = false;
-                console.log('📸 Captured! Effect + Frame applied!');
+                console.log('📸 Captured!');
             }
 
             // ========== CAROUSEL ==========
@@ -1039,7 +992,6 @@
                     return;
                 }
 
-                // Build slides
                 let slidesHTML = '';
                 photos.forEach((dataUrl, idx) => {
                     slidesHTML += `
@@ -1065,25 +1017,20 @@
 
                 carouselTrack.innerHTML = slidesHTML;
 
-                // Dots
                 let dotsHTML = '';
                 for (let i = 0; i < total; i++) {
                     dotsHTML += `<button class="carousel-dot ${i === currentSlide ? 'active' : ''}" data-index="${i}"></button>`;
                 }
                 carouselDots.innerHTML = dotsHTML;
 
-                // Dot click
                 carouselDots.querySelectorAll('.carousel-dot').forEach(dot => {
                     dot.addEventListener('click', function() {
                         goToSlide(parseInt(this.dataset.index));
                     });
                 });
 
-                // Update buttons
                 carouselPrev.disabled = total <= 1;
                 carouselNext.disabled = total <= 1;
-
-                // Go to current slide
                 goToSlide(Math.min(currentSlide, total - 1));
             }
 
@@ -1092,13 +1039,12 @@
                 if (total === 0) return;
                 currentSlide = Math.max(0, Math.min(index, total - 1));
                 carouselTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
-                // Update dots
                 carouselDots.querySelectorAll('.carousel-dot').forEach((dot, i) => {
                     dot.classList.toggle('active', i === currentSlide);
                 });
             }
 
-            // ========== DOWNLOAD (dengan effect & frame) ==========
+            // ========== DOWNLOAD ==========
             function downloadImage(dataUrl, filename = 'photobooth.jpg') {
                 const link = document.createElement('a');
                 link.download = filename;
@@ -1122,9 +1068,8 @@
                 return new Promise(r => setTimeout(r, ms));
             }
 
-            // ========== EVENT LISTENERS ==========
+            // ========== EVENTS ==========
 
-            // Filter
             filterChips.forEach(chip => {
                 chip.addEventListener('click', function() {
                     filterChips.forEach(c => c.classList.remove('active'));
@@ -1146,7 +1091,7 @@
                 });
             });
 
-            // Mirror (default OFF = normal preview)
+            // Mirror toggle - default checked (ON)
             mirrorToggle.addEventListener('change', function() {
                 isMirror = this.checked;
                 wrapper.classList.toggle('mirror-on', isMirror);
@@ -1175,7 +1120,6 @@
 
             clearBtn.addEventListener('click', clearAll);
 
-            // Carousel buttons
             carouselPrev.addEventListener('click', () => {
                 if (currentSlide > 0) goToSlide(currentSlide - 1);
             });
@@ -1183,7 +1127,6 @@
                 if (currentSlide < photos.length - 1) goToSlide(currentSlide + 1);
             });
 
-            // Keyboard
             document.addEventListener('keydown', (e) => {
                 if (e.key === ' ' || e.key === 'Enter') { e.preventDefault();
                     capturePhoto(); }
@@ -1197,10 +1140,8 @@
             initCamera();
 
             console.log('💗 PHOTOBOOTH LOVE FRAME · FABLE 5');
+            console.log('🪞 DEFAULT MIRROR ON (selfie mode)');
             console.log('🎯 Space/Enter = Capture | D = Download | C = Clear');
-            console.log('🪞 Mirror OFF by default (normal preview)');
-            console.log('💗 Frame ON by default');
-            console.log('📸 Effect + Frame saved in downloaded image!');
 
         })();
     </script>
